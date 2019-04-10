@@ -23,6 +23,8 @@ class DPDA():
                 self.parse_line_for_stack_alphabet(line)
             elif line_number == 3:
                 self.parse_line_for_start_state(line)
+            elif line_number == 4:
+                self.parse_line_for_accept_states(line)
 
             line_number += 1
 
@@ -49,7 +51,12 @@ class DPDA():
     def parse_line_for_start_state(self, line):
         line = self.remove_whitespace_and_newline(line)
         self.start_state = line
-        
+    
+    def parse_line_for_accept_states(self, line):
+        line = self.remove_whitespace_and_newline(line)
+        accept_states = line.split(",")
+        for accept_state in accept_states:
+            self.accept_states.add(accept_state)     
 
     def remove_whitespace_and_newline(self, line):
         return line.strip().replace("\n", "")
