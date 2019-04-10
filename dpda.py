@@ -77,3 +77,6 @@ class DPDA():
     
     def get_start_state(self):
         return self.start_state
+    
+    def get_transition_rules(self):
+        return self.transition_rules

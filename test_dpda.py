@@ -54,4 +54,9 @@ class TestDPDA(object):
         expected_accept_states = set(["q1", "q4"])
         accept_states = create_dpda.get_accept_states()
         assert expected_accept_states == accept_states
+
+    def test_parsing_file_for_transitions(self, create_dpda):
+        expected_transitions = {}
+        transitions = create_dpda.get_transition_rules()
+        assert expected_transitions == transitions
     
