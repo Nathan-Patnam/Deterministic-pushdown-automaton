@@ -21,6 +21,8 @@ class DPDA():
                 self.parse_line_for_dpda_alphabet(line)
             elif line_number == 2:
                 self.parse_line_for_stack_alphabet(line)
+            elif line_number == 3:
+                self.parse_line_for_start_state(line)
 
             line_number += 1
 
@@ -43,6 +45,10 @@ class DPDA():
         alphabet = line.split(",")
         for element in alphabet:
             self.stack_alphabet.add(element)
+    
+    def parse_line_for_start_state(self, line):
+        line = self.remove_whitespace_and_newline(line)
+        self.start_state = line
         
 
     def remove_whitespace_and_newline(self, line):

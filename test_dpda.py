@@ -41,6 +41,17 @@ class TestDPDA(object):
         assert expected_dpda_alphabet == dpda_alphabet
     
     def test_parsing_file_for_stack_alphabet(self, create_dpda):
+        expected_stack_alphabet = set(["0", "$"])
+        states = create_dpda.get_stack_alphabet()
+        assert expected_stack_alphabet == states
+    
+    def test_parsing_file_for_start_state(self, create_dpda):
+        expected_start_state = "q1"
+        start_state = create_dpda.get_start_state()
+        assert expected_start_state == start_state
+    """"
+    def test_parsing_file_for_stack_alphabet(self, create_dpda):
         expected_states = set(["0", "$"])
         states = create_dpda.get_stack_alphabet()
         assert expected_states == states
+    """
