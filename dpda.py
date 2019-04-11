@@ -86,23 +86,39 @@ class DPDA():
     
     def get_decision(self, string):
         self.stack = []
-        start_state = self.start_state
-
-        
+        current_state = self.start_state
+        print(string)
         for char in string:
-            if self.is_stack_empty():
-                if start_state in self.transition_rules:
-                    if (char, "@", "")  in self.transition_rules[start_state]:
-                        return "rejection"
-            
-                else:
-                    return "rejection"
-            
+            top_of_stack = self.get_top_of_stack()
+            search_record = (current_state, char, top_of_stack)
+            print(search_record)
+            if search_record in self.transition_rules:
+                value = self.transition_rules[search_record]
+                pushed_symbol = value[0]
+                next_state = value[1]
+                if pushed_symbol != "@":
+                    self.stack.pop()
+                    self.stack.append(pushed_symbol)
+                current_state = next_state
+
+                
+            else:
+                return "reject"
+        if current_state in self.accept_states:
+            return "accept"
+        
             #it doesn't so only one path
 
 
     
-        return "rejection"
+
+    
+
+    def get_top_of_stack(self):
+        if self.is_stack_empty():
+            return "@"
+        else:
+            return self.stack[-1]
     
     def is_stack_empty(self):
         return len(self.stack) == 0

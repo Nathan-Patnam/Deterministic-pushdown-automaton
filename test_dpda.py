@@ -77,9 +77,13 @@ class TestDPDA(object):
 
     def test_empty_string(self, create_dpda):
         string = ""
-        decision = "rejection"
+        decision = "reject"
         assert decision == create_dpda.get_decision(string)
 
+    def test_a(self, create_dpda):
+        string = "0"
+        decision = "reject"
+        assert decision == create_dpda.get_decision(string)
 
     #def test_empty_stack(self, create_dpda):
 
