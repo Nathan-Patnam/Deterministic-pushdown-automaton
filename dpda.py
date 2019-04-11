@@ -62,27 +62,53 @@ class DPDA():
 
     def parse_line_for_transition(self, line):
         line = self.remove_whitespace_and_newline(line)
-        start_state, end_state, transition_record = self.parse_line_for_info(
-            line)
-
-        if start_state in self.transition_rules:
-            self.transition_rules[start_state][transition_record] = end_state
-        else:
-            self.transition_rules[start_state] = {transition_record:end_state}
+        key, value = self.parse_line_for_info(line)
+        self.transition_rules[key] = value
+        
     
     def parse_line_for_info(self, line):
         line = line.split(",")
+
         start_state = line[0]
         reading_symbol = line[1]
         top_of_stack = line[2]
+
         end_state = line[3]
         push_to_stack = line[4]
 
-        record = (reading_symbol, top_of_stack, push_to_stack)
-        return start_state, end_state, record
+        inputt = (start_state, reading_symbol, top_of_stack)
+        output = (push_to_stack, end_state)
+        return inputt, output
 
     def remove_whitespace_and_newline(self, line):
         return line.strip().replace("\n", "")
+
+    
+    def get_decision(self, string):
+        self.stack = []
+        start_state = self.start_state
+
+        
+        for char in string:
+            if self.is_stack_empty():
+                if start_state in self.transition_rules:
+                    if (char, "@", "")  in self.transition_rules[start_state]:
+                        return "rejection"
+            
+                else:
+                    return "rejection"
+            
+            #it doesn't so only one path
+
+
+    
+        return "rejection"
+    
+    def is_stack_empty(self):
+        return len(self.stack) == 0
+    
+
+
 
 
     def get_states(self):

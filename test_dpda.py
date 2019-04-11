@@ -57,33 +57,31 @@ class TestDPDA(object):
 
     def test_parse_line_for_record(self, create_dpda):
         record = {
-            "q1": {
-                ("@", "@", "$"): "q2"
-            },
-            "q2": {
-                ("0", "@", "0"): "q2",
-                ("1", "0", "@"): "q3"
-            },
-            "q3": {
-                ("1", "0", "@"): "q3",
-                ("@", "$", "@"): "q4"
-
+            ("q1", "@", "@") : ("$","q2"),
+            ("q2", "0", "@"): ("0", "q2"),
+            ("q2", "1", "0") : ("@","q3"),
+            ("q3", "1", "0"): ("@", "q3"),
+            ("q3", "@", "$"): ("@", "q4"),
             }
-        }
-
         assert record == create_dpda.get_transition_rules()
 
     def test_parse_line_for_info(self, create_dpda):
-        start_state = "q1"
-        end_state = "q2"
-        record = ("@", "@", "$")
-        line = "q1,@,@,q2,$"
-        foo, bar, foobar = create_dpda.parse_line_for_info(line)
+        record = ("q1", "@", "@")
+        end_state = ("$", "q2")
 
-        assert [start_state, end_state, record] == [foo, bar, foobar]
+        line = "q1,@,@,q2,$"
+
+        foo, bar = create_dpda.parse_line_for_info(line)
+
+        assert [record, end_state] == [foo, bar]
 
     def test_empty_string(self, create_dpda):
         string = ""
+        decision = "rejection"
+        assert decision == create_dpda.get_decision(string)
+
+
+    #def test_empty_stack(self, create_dpda):
 
     """
     def test_parsing_file_for_transitions(self, create_dpda):
