@@ -62,10 +62,13 @@ class DPDA():
 
     def parse_line_for_transition(self, line):
         line = self.remove_whitespace_and_newline(line)
-        start_state,transition_record,end_state = self.parse_line_for_info(line)
-    
+        start_state, end_state, transition_record = self.parse_line_for_info(
+            line)
 
-        print(line)
+        if start_state in self.transition_rules:
+            self.transition_rules[start_state][transition_record] = end_state
+        else:
+            self.transition_rules[start_state] = {transition_record:end_state}
     
     def parse_line_for_info(self, line):
         line = line.split(",")
@@ -82,9 +85,6 @@ class DPDA():
         return line.strip().replace("\n", "")
 
 
-    def add_transition(self, line):
-        return ""
-    
     def get_states(self):
         return self.start_states
     
