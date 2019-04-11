@@ -25,6 +25,8 @@ class DPDA():
                 self.parse_line_for_start_state(line)
             elif line_number == 4:
                 self.parse_line_for_accept_states(line)
+            else:
+                self.parse_line_for_transition(line)
 
             line_number += 1
 
@@ -56,12 +58,32 @@ class DPDA():
         line = self.remove_whitespace_and_newline(line)
         accept_states = line.split(",")
         for accept_state in accept_states:
-            self.accept_states.add(accept_state)     
+            self.accept_states.add(accept_state)
+
+    def parse_line_for_transition(self, line):
+        line = self.remove_whitespace_and_newline(line)
+        start_state,transition_record,end_state = self.parse_line_for_info(line)
+    
+
+        print(line)
+    
+    def parse_line_for_info(self, line):
+        line = line.split(",")
+        start_state = line[0]
+        reading_symbol = line[1]
+        top_of_stack = line[2]
+        end_state = line[3]
+        push_to_stack = line[4]
+
+        record = (reading_symbol, top_of_stack, push_to_stack)
+        return start_state, end_state, record
 
     def remove_whitespace_and_newline(self, line):
         return line.strip().replace("\n", "")
 
 
+    def add_transition(self, line):
+        return ""
     
     def get_states(self):
         return self.start_states

@@ -54,9 +54,22 @@ class TestDPDA(object):
         expected_accept_states = set(["q1", "q4"])
         accept_states = create_dpda.get_accept_states()
         assert expected_accept_states == accept_states
+    
+    def test_parse_line_for_info(self, create_dpda):
+        start_state = "q1"
+        end_state = "q2"
+        record = ("@", "@", "$")
+        line = "q1,@,@,q2,$"
+        foo, bar, foobar = create_dpda.parse_line_for_info(line)
 
+        assert [start_state, end_state, record] == [foo, bar, foobar]
+
+    
+    """
     def test_parsing_file_for_transitions(self, create_dpda):
-        expected_transitions = {}
+        expected_transitions = {"q1": {("@","@","$"):"q2"} }
         transitions = create_dpda.get_transition_rules()
         assert expected_transitions == transitions
+    """
+   
     
