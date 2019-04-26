@@ -1,28 +1,15 @@
-#from ..nfa import build_nfa
 import pytest
 from dpda import DPDA
 
 
+@pytest.fixture(scope="module")
+def create_dpda():
+    d_pushdown_automota = DPDA("dpda.txt")
+    return d_pushdown_automota
+
+
 class TestDPDA(object):
-    """
-    @pytest.fixture(scope="function")
-    def create_nfa(self):
-        test_nfa = build_nfa("mocks/nfa_1.txt")
-        test_nfa.run_machine("./mocks/nfa_input_1.txt",
-                             "./mocks/outputs/nfa_output_1.txt")
-        return test_nfa
-
-    def test_get_states(self, create_nfa):
-        states = set(["s2", "s1", "s3", "s4", "s5"])
-        nfa_states = create_nfa.states
-        assert states == nfa_states
-    """
-
-    @pytest.fixture(scope="function")
-    def create_dpda(self):
-        d_pushdown_automota = DPDA("dpda.txt")
-        return d_pushdown_automota
-
+    @pytest.fixture(autouse=True)
     def test_remove_whitespace_and_newline(self, create_dpda):
         whitespaced__newline_word = "q4\n "
         formatted_word = "q4"
@@ -57,39 +44,44 @@ class TestDPDA(object):
 
     def test_parse_line_for_record(self, create_dpda):
         record = {
-            ("q1", "@", "@") : ("$","q2"),
+            ("q1", "@", "@"): ("$", "q2"),
             ("q2", "0", "@"): ("0", "q2"),
-            ("q2", "1", "0") : ("@","q3"),
+            ("q2", "1", "0"): ("@", "q3"),
             ("q3", "1", "0"): ("@", "q3"),
             ("q3", "@", "$"): ("@", "q4"),
-            }
+        }
         assert record == create_dpda.get_transition_rules()
 
     def test_parse_line_for_info(self, create_dpda):
         record = ("q1", "@", "@")
         end_state = ("$", "q2")
-
         line = "q1,@,@,q2,$"
-
-        foo, bar = create_dpda.parse_line_for_info(line)
+        foo, bar = create_dpda.parse_line_for_pushed_symbol_and_end_state(line)
 
         assert [record, end_state] == [foo, bar]
 
-    def test_empty_string(self, create_dpda):
-        string = ""
-        decision = "reject"
-        assert decision == create_dpda.get_decision(string)
+    @pytest.fixture
+    def get_machine_result_for_each(self):
+        return [("", "accept"),
+                ("0", "reject"),
+                ("1", "reject"),
+                ("00", "reject"),
+                ("01", "accept"),
+                ("10", "reject"),
+                ("11", "reject"),
+                ("000111", "accept"),
+                ("0011", "accept"),
+                ("01", "accept"),
+                ("00001111", "accept"),
+                ("01111", "reject"),
+                ("0010000", "reject"),
+                ("1010", "reject"),
+                ("0000", "reject")
+                ]
 
-    def test_a(self, create_dpda):
-        string = "0"
-        decision = "reject"
-        assert decision == create_dpda.get_decision(string)
-
-    #def test_empty_stack(self, create_dpda):
-
-    """
-    def test_parsing_file_for_transitions(self, create_dpda):
-        expected_transitions = {"q1": {("@","@","$"):"q2"} }
-        transitions = create_dpda.get_transition_rules()
-        assert expected_transitions == transitions
-    """
+    def test_inputs_on_dpda(self, create_dpda, get_machine_result_for_each):
+        for input_output in get_machine_result_for_each:
+                input_string = input_output[0]
+                output = create_dpda.get_decision(input_string)
+                expected_output_string = input_output[1]
+                assert output == expected_output_string
