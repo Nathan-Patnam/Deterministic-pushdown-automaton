@@ -1,4 +1,4 @@
 dpda.1.txt
-2_4b.jff
-/__pycache__/dpda.cpython-37.pyc
-/__pycache__/test_dpda.cpython-37-PYTEST.pyc
+*.jff
+*.pyc
+*/__pycache__/*

@@ -62,6 +62,7 @@ class DPDA():
         self.transition_rules[key] = value
 
     def parse_line_for_pushed_symbol_and_end_state(self, line):
+
         line = line.split(",")
 
         start_state = line[0]
